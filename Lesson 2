@@ -1,0 +1,137 @@
+# Напишите программу, которая получает целое число и возвращает его шестнадцатеричное строковое представление.
+# Функцию hex используйте для проверки своего результата
+
+def to_hex(num):
+    hex_str = "0123456789ABCDEF"
+    if num == 0:
+        return '0'
+    hex_num = ''
+    while num > 0:
+        remainder = num % 16
+        hex_num = hex_str[remainder] + hex_num
+        num //= 16
+    return hex_num
+print(to_hex(755))
+print(hex(755))
+
+
+# Напишите программу, которая принимает две строки вида “a/b” - дробь с числителем и знаменателем. 
+# Программа должна возвращать сумму и произведение* дробей. 
+# Для проверки своего кода используйте модуль fractions.
+
+import fractions
+
+def add_fraction(f1, f2):
+    num1, den1 = map(int, f1.split('/'))
+    num2, den2 = map(int, f2.split('/'))
+    result_num = num1 * den2 + num2 * den1
+    result_den = den1 * den2
+    return f"{result_num}/{result_den}"
+
+def multiply_fraction(f1, f2):
+    num1, den1 = map(int, f1.split('/'))
+    num2, den2 = map(int, f2.split('/'))
+    result_num = num1 * num2
+    result_den = den1 * den2
+    return f"{result_num}/{result_den}"
+
+# Пример использования
+fraction1 = input("Введите первую дробь в формате 'a/b': ")
+fraction2 = input("Введите вторую дробь в формате 'a/b': ")
+sum_fraction = add_fraction(fraction1, fraction2)
+multiply_fraction = multiply_fraction(fraction1, fraction2)
+
+# Проверка с помощью модуля fractions
+f1 = fractions.Fraction(fraction1)
+f2 = fractions.Fraction(fraction2)
+sum_fractions = f1 + f2
+multiply_fractions = f1 * f2
+
+print(f"Сумма дробей: {sum_fraction} ({sum_fractions})")
+print(f"Произведение дробей: {multiply_fraction} ({multiply_fractions})")
+
+
+
+"""
+Напишите программу банкомат.
+Начальная сумма равна нулю
+Допустимые действия: пополнить, снять, выйти
+Сумма пополнения и снятия кратны 50 у.е.
+Процент за снятие — 1.5% от суммы снятия, но не менее 30 и не более 600 у.е.
+После каждой третей операции пополнения или снятия начисляются проценты - 3%
+Нельзя снять больше, чем на счёте
+При превышении суммы в 5 млн, вычитать налог на богатство 10% перед каждой
+операцией, даже ошибочной.Любое действие выводит сумму денег
+"""
+
+
+balance = 0
+count = 0
+while True:
+    action = input("Введите действие (пополнить, снять, выйти): ")
+    if action == "пополнить":
+        amount = int(input("Введите сумму, кратную 50: "))
+        if amount % 50 == 0:
+            balance += amount
+            count += 1
+            if count % 3 == 0:
+                balance *= 1.03
+            if balance > 5000000:
+                balance -= balance * 0.1
+            print("Баланс: ", round(balance, 2))
+        else:
+            print("Сумма должна быть кратна 50!")
+    elif action == "снять":
+        amount = int(input("Введите сумму, кратную 50: "))
+        if amount % 50 == 0:
+            if amount <= balance:
+                balance -= amount
+                count += 1
+                if count % 3 == 0:
+                    balance *= 1.03
+                fee = amount * 0.015
+                if fee < 30:
+                    fee = 30
+                elif fee > 600:
+                    fee = 600
+                balance -= fee
+                if balance > 5000000:
+                    balance -= balance * 0.1
+                print("Баланс: ", round(balance, 2))
+            else:
+                print("Недостаточно средств!")
+        else:
+            print("Сумма должна быть кратна 50!")
+    elif action == "выйти":
+        print("Баланс: ", round(balance, 2))
+        break
+    else:
+        print("Недопустимое действие!")
+        
+        
+"""
+Напишите программу, которая решает
+квадратные уравнения даже если
+дискриминант отрицательный.
+Используйте комплексные числа
+для извлечения квадратного корня.
+"""
+
+import cmath
+
+a = float(input("Введите коэффициент a: "))
+b = float(input("Введите коэффициент b: "))
+c = float(input("Введите коэффициент c: "))
+
+discriminant = b**2 - 4*a*c
+
+if discriminant >= 0:
+    x1 = (-b + discriminant**0.5) / (2*a)
+    x2 = (-b - discriminant**0.5) / (2*a)
+    print("Корни уравнения:", x1, x2)
+else:
+    real_part = -b / (2*a)
+    imaginary_part = abs(discriminant)**0.5 / (2*a)
+    x1 = complex(real_part, imaginary_part)
+    x2 = complex(real_part, -imaginary_part)
+    print("Корни уравнения:", x1, x2)
