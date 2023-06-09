@@ -1,0 +1,113 @@
+# Напишите функцию для транспонирования матрицы
+
+def transpose(matrix):
+    """
+    Функция для транспонирования матрицы.
+
+    :param matrix: матрица, которую нужно транспонировать
+    :return: транспонированная матрица
+    """
+    # Получаем количество строк и столбцов в матрице
+    rows = len(matrix)
+    cols = len(matrix[0])
+
+    # Создаем новую матрицу с обменными местами строками и столбцами
+    transposed = [[matrix[j][i] for j in range(rows)] for i in range(cols)]
+
+    return transposed
+
+
+#Пример использования функции:
+
+matrix = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9]
+]
+
+transposed_matrix = transpose(matrix)
+
+print(transposed_matrix)
+# Output: [[1, 4, 7], [2, 5, 8], [3, 6, 9]]
+
+"""""
+Функция работает следующим образом:
+
+1. Получаем количество строк и столбцов в матрице.
+2. Создаем новую матрицу с размером, равным количеству столбцов и строк соответственно.
+3. Заполняем новую матрицу элементами из исходной матрицы, меняя местами индексы строк и столбцов.
+"""""
+
+
+
+# Напишите функцию принимающую на вход только ключевые параметры и возвращающую словарь, где ключ - значение переданного аргумента, а значение - имя аргумента.
+# Если ключ не хешируем, используйте его строковое представление.
+
+def kwargs_to_dict(**kwargs):
+    """
+    Функция для преобразования ключевых параметров в словарь.
+
+    :param kwargs: ключевые параметры
+    :return: словарь, где ключ - значение переданного аргумента, а значение - имя аргумента
+    """
+    return {str(value): key for key, value in locals().items() if key in kwargs}
+
+def kwargs_to_dict(**kwargs):
+    """
+    Функция для преобразования ключевых параметров в словарь.
+
+    :param kwargs: ключевые параметры
+    :return: словарь, где ключ - значение переданного аргумента, а значение - имя аргумента
+    """
+    return {str(value): key for key, value in locals().items() if key in kwargs}
+    
+    
+    # Возьмите задачу о банкомате из семинара 2. Разбейте её на отдельные операции - функции.
+    # Дополнительно сохраняйте все операции поступления и снятия средств в список.
+    
+    def atm():
+    balance = 0
+    operations = []
+
+    def add_money(amount):
+        nonlocal balance
+        balance += amount
+        operations.append(('add', amount))
+
+    def withdraw_money(amount):
+        nonlocal balance
+        if amount % 50 != 0:
+            print("Amount must be a multiple of 50")
+            return
+        if amount > balance:
+            print("Not enough money on the account")
+            return
+        commission = max(30, min(amount * 0.015, 600))
+        balance -= amount + commission
+        operations.append(('withdraw', amount))
+        if len(operations) % 3 == 0:
+            balance *= 1.03
+        if balance > 5000000:
+            balance -= balance * 0.1
+
+    while True:
+        action = input("Choose an action: add, withdraw, exit\n")
+        if action == "add":
+            amount = int(input("Enter the amount to add (must be a multiple of 50): "))
+            add_money(amount)
+            print(f"New balance: {balance}")
+        elif action == "withdraw":
+            amount = int(input("Enter the amount to withdraw (must be a multiple of 50): "))
+            withdraw_money(amount)
+            print(f"New balance: {balance}")
+        elif action == "exit":
+            break
+        else:
+            print("Invalid action")
+
+    print("Operations history:")
+    for operation in operations:
+        print(operation)
+
+
+atm()
