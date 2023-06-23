@@ -1,0 +1,76 @@
+"""
+Напишите функцию, которая получает на вход директорию и рекурсивно обходит её и все вложенные директории. 
+Результаты обхода сохраните в файлы json, csv и pickle. 
+- Для дочерних объектов указывайте родительскую директорию. 
+- Для каждого объекта укажите файл это или директория. 
+- Для файлов сохраните его размер в байтах, а для директорий размер файлов в ней с учётом всех вложенных файлов и директорий.
+"""
+
+
+import os
+import json
+import csv
+import pickle
+
+
+def get_directory_size(directory):
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(directory):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            total_size += os.path.getsize(fp)
+    return total_size
+
+
+def get_directory_structure(directory):
+    directory_structure = []
+    for dirpath, dirnames, filenames in os.walk(directory):
+        for dirname in dirnames:
+            dir_size = get_directory_size(os.path.join(dirpath, dirname))
+            directory_structure.append({
+                "name": dirname,
+                "path": dirpath,
+                "type": "directory",
+                "size": dir_size
+            })
+        for filename in filenames:
+            file_path = os.path.join(dirpath, filename)
+            file_size = os.path.getsize(file_path)
+            directory_structure.append({
+                "name": filename,
+                "path": dirpath,
+                "type": "file",
+                "size": file_size
+            })
+    return directory_structure
+
+
+def save_directory_structure(directory, output_path):
+    structure = get_directory_structure(directory)
+    json_file = output_path + ".json"
+    csv_file = output_path + ".csv"
+    pickle_file = output_path + ".pickle"
+
+    with open(json_file, "w") as f:
+        json.dump(structure, f, indent=4)
+
+    with open(csv_file, "w", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["Name", "Path", "Type", "Size (bytes)"])
+        for item in structure:
+            writer.writerow([item["name"], item["path"], item["type"], item["size"]])
+
+    with open(pickle_file, "wb") as f:
+        pickle.dump(structure, f)
+
+    print("Directory structure saved to JSON: ", json_file)
+    print("Directory structure saved to CSV: ", csv_file)
+    print("Directory structure saved to pickle: ", pickle_file)
+
+
+directory_path = "путь_к_директории"
+output_file_path = "путь_к_выходному_файлу"
+
+save_directory_structure(directory_path, output_file_path)
+
+
