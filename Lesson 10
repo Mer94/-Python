@@ -90,3 +90,111 @@ if __name__ == '__main__':
     print(dog)
     print(bird)
     print(fish)
+
+
+
+# Возьмите 1-3 любые задачи из прошлых семинаров (например сериализация данных), которые вы уже решали. 
+# Превратите функции в методы класса, а параметры в свойства. Задачи должны решаться через вызов методов экземпляра.
+
+"""
+ Напишите функцию, которая принимает строку текста.
+Вывести функцией каждое слово с новой строки.
+✔ Строки нумеруются начиная с единицы.
+✔ Слова выводятся отсортированными согласно кодировки Unicode.
+✔ Текст выравнивается по правому краю так, чтобы у самого
+длинного слова был один пробел между ним и номером строки.
+"""
+
+# def task1(inp: str) -> None:
+#     text_list = inp.split()
+#     text_list.sort()
+#     max_lenght = len(max(text_list, key = len))
+#     for number, item in enumerate(text_list, start = 1):
+#         print(f'{number} {item:>{max_lenght}}')
+#
+# task1('adsad asdasd as dasd das das')
+
+class TextManipulator:
+    def __init__(self, inp):
+        self._input = inp
+
+    def task1(self):
+        text_list = self._input.split()
+        text_list.sort()
+        max_length = len(max(text_list, key=len))
+        for number, item in enumerate(text_list, start=1):
+            print(f'{number} {item:>{max_length}}')
+
+
+input_text = "apple orange banana"
+manipulator = TextManipulator(input_text)
+manipulator.task1()
+
+"""
+Напишите функцию, которая принимает строку текста.
+✔ Сформируйте список с уникальными кодами Unicode каждого
+символа введённой строки отсортированный по убыванию.
+
+"""
+# def task2(inp: str) -> list[int]:
+#     result = set()
+#     for i in inp:
+#         result.add(ord(i))
+#     return sorted(result, reverse=True)
+#
+# print(task2('adsfds fdsfds dsaf'))
+
+class TextManipulator:
+    def __init__(self, inp):
+        self._input = inp
+
+    def task2(self):
+        result = set()
+        for i in self._input:
+            result.add(ord(i))
+        return sorted(result, reverse=True)
+
+
+input_text = "adsfds fdsfds dsaf"
+manipulator = TextManipulator(input_text)
+result = manipulator.task2()
+print(result)
+
+"""
+✔ Функция получает на вход строку из двух чисел через пробел.
+✔ Сформируйте словарь, где ключом будет
+символ из Unicode, а значением — целое число.
+✔ Диапазон пар ключ-значение от наименьшего из введённых
+пользователем чисел до наибольшего включительно
+"""
+
+# def task3(inp: str) -> dict[int: int]:
+#     num1, num2 = tuple(map(int, inp.split()))
+#     min_number = min(num1, num2)
+#     max_number = max(num1, num2)
+#     result = dict()
+#     for i in range(min_number, max_number + 1):
+#         result.update({chr(i): i})
+#     return result
+#
+# print(task3('10 99'))
+
+class NumberManipulator:
+    def __init__(self, inp):
+        self._input = inp
+
+    def task3(self):
+        num1, num2 = tuple(map(int, self._input.split()))
+        min_number = min(num1, num2)
+        max_number = max(num1, num2)
+        result = {}
+        for i in range(min_number, max_number + 1):
+            result[chr(i)] = i
+        return result
+
+
+input_numbers = "10 99"
+manipulator = NumberManipulator(input_numbers)
+result = manipulator.task3()
+print(result)
+
