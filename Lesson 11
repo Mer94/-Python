@@ -1,0 +1,131 @@
+"""
+Добавьте ко всем задачам с семинара строки документации и методы вывода информации на печать.
+"""
+
+class Rectangle:
+    """
+    Класс, представляющий прямоугольник.
+    """
+
+    def __init__(self, a: int, b: int = None):
+        """
+        Инициализация прямоугольника.
+        """
+        self.a = a
+        self.b = b if b is not None else a
+
+    def perimeter(self) -> int:
+        """
+        Вычисляет периметр прямоугольника.
+        """
+        return 2 * (self.a + self.b)
+
+    def area(self) -> int:
+        """
+        Вычисляет площадь прямоугольника.
+        """
+        return self.a * self.b
+
+    def __add__(self, other) -> 'Rectangle':
+        """
+        Перегрузка оператора сложения.
+        """
+        new_perimeter = self.perimeter() + other.perimeter()
+        new_a = self.a
+        new_b = new_perimeter / 2 - new_a
+        return Rectangle(new_a, new_b)
+
+    def __sub__(self, other) -> 'Rectangle':
+        """
+        Перегрузка оператора вычитания.
+        """
+        new_perimeter = abs(self.perimeter() - other.perimeter())
+        new_a = min([self.a, self.b, other.a, other.b])
+        new_b = new_perimeter / 2 - new_a
+        return Rectangle(new_a, new_b)
+
+    def __str__(self) -> str:
+        """
+        Перегрузка метода преобразования в строку.
+        """
+        return f'Rectangle(a={self.a}, b={self.b})'
+
+
+if __name__ == '__main__':
+    rect_1 = Rectangle(2, 5)
+    rect_2 = Rectangle(5, 10)
+    res_sum = rect_1 + rect_2
+    print(res_sum)
+    res_sub = rect_1 - rect_2
+    print(res_sub)
+    help(rect_1)
+    help(rect_2)
+
+
+
+"""
+Создайте класс Матрица. Добавьте методы для:
+вывода на печать,
+сравнения,
+сложения,
+*умножения матриц
+"""
+
+
+class Matrix:
+    def __init__(self, data):
+        self.data = data
+
+    def __str__(self):
+        rows = []
+        for row in self.data:
+            row_str = ' '.join(str(element) for element in row)
+            rows.append(row_str)
+        return '\n'.join(rows)
+
+    def __eq__(self, other):
+        return self.data == other.data
+
+    def __add__(self, other):
+        if len(self.data) != len(other.data) or len(self.data[0]) != len(other.data[0]):
+            raise ValueError("Matrices must have the same dimensions for addition.")
+        
+        result = []
+        for i in range(len(self.data)):
+            row = []
+            for j in range(len(self.data[i])):
+                row.append(self.data[i][j] + other.data[i][j])
+            result.append(row)
+        
+        return Matrix(result)
+
+    def __mul__(self, other):
+        if len(self.data[0]) != len(other.data):
+            raise ValueError("Number of columns in the first matrix must be equal to the number of rows in the second matrix.")
+
+        result = []
+        for i in range(len(self.data)):
+            row = []
+            for j in range(len(other.data[0])):
+                element = 0
+                for k in range(len(other.data)):
+                    element += self.data[i][k] * other.data[k][j]
+                row.append(element)
+            result.append(row)
+
+        return Matrix(result)
+
+
+matrix1 = Matrix([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+matrix2 = Matrix([[9, 8, 7], [6, 5, 4], [3, 2, 1]])
+
+print(matrix1)  # Вывод матрицы на печать
+print(matrix2)
+
+print(matrix1 == matrix2)  # Сравнение матриц
+
+matrix_sum = matrix1 + matrix2  # Сложение матриц
+print(matrix_sum)
+
+matrix_product = matrix1 * matrix2  # Умножение матриц
+print(matrix_product)
