@@ -1,0 +1,123 @@
+"""
+Создайте класс студента.
+* Используя дескрипторы проверяйте ФИО на первую заглавную букву и наличие только букв.
+* Названия предметов должны загружаться из файла CSV при создании экземпляра. Другие предметы в экземпляре недопустимы.
+* Для каждого предмета можно хранить оценки (от 2 до 5) и результаты тестов (от 0 до 100).
+* Также экземпляр должен сообщать средний балл по тестам для каждого предмета и по оценкам всех предметов вместе взятых.
+"""
+
+
+import csv
+
+
+class NameValidator:
+    def __get__(self, instance, owner):
+        return instance.__dict__["name"]
+
+    def __set__(self, instance, value):
+        if not all(word.istitle() and word.isalpha() for word in value.split()):
+            raise ValueError("Invalid name format.")
+        instance.__dict__["name"] = value
+
+
+class SubjectsValidator:
+    def __init__(self, subjects_file):
+        self.subjects = self.load_subjects(subjects_file)
+
+    def load_subjects(self, subjects_file):
+        with open(subjects_file, "r") as file:
+            reader = csv.reader(file)
+            subjects = next(reader)
+        return subjects
+
+    def __get__(self, instance, owner):
+        return self.subjects
+
+    def __set__(self, instance, value):
+        raise AttributeError("Cannot add new subjects.")
+
+
+class MarksValidator:
+    def __get__(self, instance, owner):
+        return instance.__dict__["marks"]
+
+    def __set__(self, instance, value):
+        if not (2 <= value <= 5):
+            raise ValueError("Invalid mark.")
+        instance.__dict__["marks"] = value
+
+
+class TestsValidator:
+    def __get__(self, instance, owner):
+        return instance.__dict__["tests"]
+
+    def __set__(self, instance, value):
+        if not (0 <= value <= 100):
+            raise ValueError("Invalid test result.")
+        instance.__dict__["tests"] = value
+
+
+class Student:
+    name = NameValidator()
+    subjects = SubjectsValidator("subjects.csv")
+
+    def __init__(self, last_name, first_name, middle_name):
+        self.name = f"{last_name} {first_name} {middle_name}"
+        self.marks = {}
+        self.tests = {}
+
+    def add_mark(self, subject, mark):
+        if subject not in self.subjects:
+            raise ValueError("Invalid subject.")
+        self.marks[subject] = mark
+
+    def add_test_result(self, subject, test_result):
+        if subject not in self.subjects:
+            raise ValueError("Invalid subject.")
+        self.tests[subject] = test_result
+
+    def get_subjects(self):
+        return self.subjects
+
+    def get_average_mark(self, subject=None):
+        if subject:
+            if subject in self.subjects and subject in self.marks:
+                return self.marks[subject]
+            else:
+                raise ValueError("Invalid subject.")
+        else:
+            if self.marks:
+                return sum(self.marks.values()) / len(self.marks)
+            else:
+                return 0.0
+
+    def get_average_test_result(self, subject=None):
+        if subject:
+            if subject in self.subjects and subject in self.tests:
+                return self.tests[subject]
+            else:
+                raise ValueError("Invalid subject.")
+        else:
+            if self.tests:
+                return sum(self.tests.values()) / len(self.tests)
+            else:
+                return 0.0
+
+student = Student("Иванов", "Иван", "Иванович")
+
+student.add_mark("Математика", 4)
+student.add_test_result("Математика", 80)
+student.add_mark("Физика", 5)
+student.add_test_result("Физика", 90)
+
+math_mark = student.get_average_mark("Математика")
+print("Средний балл по Математике:", math_mark)
+
+physics_test_result = student.get_average_test_result("Физика")
+print("Средний результат теста по Физике:", physics_test_result)
+
+average_mark = student.get_average_mark()
+print("Средний балл по всем предметам:", average_mark)
+
+average_test_result = student.get_average_test_result()
+print("Средний результат тестов по всем предметам:", average_test_result)
