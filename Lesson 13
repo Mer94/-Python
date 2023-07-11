@@ -1,0 +1,100 @@
+"""
+ Напишите код, который запрашивает число и сообщает является ли оно простым или составным.
+ Используйте правило для проверки: “Число является простым, если делится нацело только на единицу и на себя”.
+ Сделайте ограничение на ввод отрицательных чисел и чисел больше 100 тысяч.
+"""
+
+  class NumberOutOfRangeError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+class PrimeNumberError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+MIN = 2
+MAX = 100000
+num = int(input(f"Введите число от {MIN} до {MAX}: "))
+result = ''
+
+try:
+    if num <= 1 or num > 100000:
+        raise NumberOutOfRangeError(f"Число должно быть больше {MIN} и меньше или равно {MAX}")
+    else:
+        is_prime = True
+        for i in range(2, int(num ** 0.5) + 1):
+            if num % i == 0:
+                is_prime = False
+                break
+        if is_prime:
+            raise PrimeNumberError("Число простое")
+        else:
+            result = "Число составное"
+except NumberOutOfRangeError as e:
+    result = e.message
+except PrimeNumberError as e:
+    result = e.message
+
+print(result)
+
+"""
+В модуль с проверкой даты добавьте возможность запуска в терминале с передачей даты на проверку.
+"""
+
+from datetime import datetime
+
+class InvalidDateFormatError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+class InvalidYearError(Exception):
+    def __init__(self, message):
+        self.message = message
+
+class LeapYearChecker:
+    def __init__(self, date):
+        self.date = date
+
+    def check_leap_year(self):
+        CHECK_NORMAL_1 = 4
+        CHECK_NORMAL_2 = 100
+        CHECK_NORMAL_3 = 400
+        YEARS = range(1, 10000)
+        year = int(self.date.split(".")[-1])
+        if year in YEARS and year % CHECK_NORMAL_1 == 0 and year % CHECK_NORMAL_2 != 0 or year % CHECK_NORMAL_3 == 0:
+            return True
+        return False
+
+class DateValidator:
+    def __init__(self, date):
+        self.date = date
+
+    def validate_date_format(self):
+        try:
+            _ = datetime.strptime(self.date, "%d.%m.%Y").date()
+            return True
+        except ValueError:
+            raise InvalidDateFormatError("Дата заполнена некорректно")
+
+    def validate_year(self):
+        leap_year_checker = LeapYearChecker(self.date)
+        if not leap_year_checker.check_leap_year():
+            raise InvalidYearError("Не является високосным")
+        return "Високосный"
+
+    def validate_date(self):
+        if self.validate_date_format():
+            return self.validate_year()
+
+def date_validator(date: str) -> str:
+    try:
+        validator = DateValidator(date)
+        return validator.validate_date()
+    except InvalidDateFormatError as e:
+        return e.message
+    except InvalidYearError as e:
+        return e.message
+
+if __name__ == '__main__':
+    date = input("Введите дату в формате ДД.ММ.ГГГГ: ")
+    print(date_validator(date))
