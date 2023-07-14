@@ -1,0 +1,231 @@
+"""
+Условие : Треугольник существует только тогда, когда сумма любых двух его сторон больше третьей.
+Дано a, b, c - стороны предполагаемого треугольника.
+Требуется сравнить длину каждого отрезка-стороны с суммой двух других.
+Если хотя бы в одном случае отрезок окажется больше суммы двух других, то треугольника с такими сторонами не существует.
+Отдельно сообщить является ли треугольник разносторонним, равнобедренным или равносторонним
+"""
+
+a = float(input("Введите длину стороны a: "))
+b = float(input("Введите длину стороны b: "))
+c = float(input("Введите длину стороны c: "))
+result = ''
+
+if (a + b > c) and (a + c > b) and (b + c > a):
+    result = "Треугольник существует"
+    if a == b == c:
+        result = "Треугольник равносторонний"
+    elif a == b or a == c or b == c:
+        result = "Треугольник равнобедренный"
+    else:
+        result = "Треугольник разносторонний"
+else:
+    result = "Треугольник не существует"
+print(result)
+
+# pytest
+1)
+def check_triangle_type(a, b, c):
+    if (a + b > c) and (a + c > b) and (b + c > a):
+        if a == b == c:
+            return 'Треугольник равносторонний'
+        elif a == b or a == c or b == c:
+            return 'Треугольник равнобедренный'
+        else:
+            return 'Треугольник разносторонний'
+    else:
+        return 'Треугольник не существует'
+
+
+def test_equilateral_triangle():
+    result = check_triangle_type(3, 3, 3)
+    assert result == 'Треугольник равносторонний'
+
+
+def test_scalene_triangle():
+    result = check_triangle_type(3, 4, 5)
+    assert result == 'Треугольник разносторонний'
+
+
+def test_isosceles_triangle():
+    result = check_triangle_type(2, 2, 3)
+    assert result == 'Треугольник равнобедренный'
+
+
+def test_invalid_triangle():
+    result = check_triangle_type(1, 2, 10)
+    assert result == 'Треугольник не существует'
+
+2)
+import pytest
+
+def check_triangle_type(a, b, c):
+    if (a + b > c) and (a + c > b) and (b + c > a):
+        if a == b == c:
+            return 'Треугольник равносторонний'
+        elif a == b or a == c or b == c:
+            return 'Треугольник равнобедренный'
+        else:
+            return 'Треугольник разносторонний'
+    else:
+        return 'Треугольник не существует'
+
+
+@pytest.mark.parametrize("a, b, c, expected", [
+    (3, 3, 3, 'Треугольник равносторонний'),
+    (3, 4, 5, 'Треугольник разносторонний'),
+    (2, 2, 3, 'Треугольник равнобедренный'),
+    (1, 2, 10, 'Треугольник не существует')
+])
+def test_check_triangle_type(a, b, c, expected):
+    result = check_triangle_type(a, b, c)
+    assert result == expected
+
+
+# doctest
+1)
+def check_triangle_type(a, b, c):
+    """
+    Функция определяет тип треугольника на основе длин его сторон.
+
+    >>> check_triangle_type(3, 3, 3)
+    'Треугольник равносторонний'
+
+    >>> check_triangle_type(3, 3, 5)
+    'Треугольник равнобедренный'
+
+    >>> check_triangle_type(4, 5, 6)
+    'Треугольник разносторонний'
+
+    >>> check_triangle_type(1, 2, 10)
+    'Треугольник не существует'
+    """
+
+    if (a + b > c) and (a + c > b) and (b + c > a):
+        if a == b == c:
+            return 'Треугольник равносторонний'
+        elif a == b or a == c or b == c:
+            return 'Треугольник равнобедренный'
+        else:
+            return 'Треугольник разносторонний'
+    else:
+        return 'Треугольник не существует'
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+
+2)
+def check_triangle_type(a, b, c):
+    """
+    Функция определяет тип треугольника на основе длин его сторон.
+
+    >>> check_triangle_type(3, 3, 3)
+    'Треугольник равносторонний'
+
+    >>> check_triangle_type(3, 4, 5)
+    'Треугольник разносторонний'
+
+    >>> check_triangle_type(2, 2, 3)
+    'Треугольник равнобедренный'
+
+    >>> check_triangle_type(1, 2, 10)
+    'Треугольник не существует'
+    """
+
+    if (a + b > c) and (a + c > b) and (b + c > a):
+        if a == b == c:
+            return 'Треугольник равносторонний'
+        elif a == b or a == c or b == c:
+            return 'Треугольник равнобедренный'
+        else:
+            return 'Треугольник разносторонний'
+    else:
+        return 'Треугольник не существует'
+
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod(verbose=True)
+
+
+
+# unittest
+1)
+import unittest
+
+
+def check_triangle_type(a, b, c):
+    result = ''
+
+    if (a + b > c) and (a + c > b) and (b + c > a):
+        result = "Треугольник существует"
+        if a == b == c:
+            result = "Треугольник равносторонний"
+        elif a == b or a == c or b == c:
+            result = "Треугольник равнобедренный"
+        else:
+            result = "Треугольник разносторонний"
+    else:
+        result = "Треугольник не существует"
+
+    return result
+
+
+class TriangleTypeTestCase(unittest.TestCase):
+    def test_equilateral_triangle(self):
+        result = check_triangle_type(3, 3, 3)
+        self.assertEqual(result, 'Треугольник равносторонний')
+
+    def test_isosceles_triangle(self):
+        result = check_triangle_type(3, 3, 5)
+        self.assertEqual(result, 'Треугольник равнобедренный')
+
+    def test_scalene_triangle(self):
+        result = check_triangle_type(4, 5, 6)
+        self.assertEqual(result, 'Треугольник разносторонний')
+
+    def test_invalid_triangle(self):
+        result = check_triangle_type(1, 2, 10)
+        self.assertEqual(result, 'Треугольник не существует')
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+2)
+import unittest
+
+def check_triangle_type(a, b, c):
+    if (a + b > c) and (a + c > b) and (b + c > a):
+        if a == b == c:
+            return 'Треугольник равносторонний'
+        elif a == b or a == c or b == c:
+            return 'Треугольник равнобедренный'
+        else:
+            return 'Треугольник разносторонний'
+    else:
+        return 'Треугольник не существует'
+
+
+class TriangleTestCase(unittest.TestCase):
+    def test_equilateral_triangle(self):
+        result = check_triangle_type(3, 3, 3)
+        self.assertEqual(result, 'Треугольник равносторонний')
+
+    def test_scalene_triangle(self):
+        result = check_triangle_type(3, 4, 5)
+        self.assertEqual(result, 'Треугольник разносторонний')
+
+    def test_isosceles_triangle(self):
+        result = check_triangle_type(2, 2, 3)
+        self.assertEqual(result, 'Треугольник равнобедренный')
+
+    def test_invalid_triangle(self):
+        result = check_triangle_type(1, 2, 10)
+        self.assertEqual(result, 'Треугольник не существует')
+
+
+if __name__ == '__main__':
+    unittest.main()
