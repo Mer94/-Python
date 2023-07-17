@@ -1,0 +1,44 @@
+# Напишите программу, которая получает целое число и возвращает его шестнадцатеричное строковое представление.
+# Функцию hex используйте для проверки своего результата
+
+import logging
+import sys
+
+
+def to_hex(num):
+    hex_str = "0123456789ABCDEF"
+    if num == 0:
+        return '0'
+    hex_num = ''
+    while num > 0:
+        remainder = num % 16
+        hex_num = hex_str[remainder] + hex_num
+        num //= 16
+    return hex_num
+
+
+if __name__ == "__main__":
+    # Конфигурация логирования
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        filename="log.txt"
+    )
+
+    # Получение параметров из командной строки
+    if len(sys.argv) > 1:
+        input_num = int(sys.argv[1])
+    else:
+        input_num = 755
+
+    try:
+        hex_num = to_hex(input_num)
+        logging.info(f"Hexadecimal representation of {input_num} is {hex_num}")
+        print(hex_num)
+    except Exception as e:
+        logging.error(f"An error occurred: {str(e)}")
+        print("An error occurred. Please check the log file for details.")
+
+# Pапустить код из командной строки, указав число в качестве аргумента:
+# python script.py 755
+
