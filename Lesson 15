@@ -40,5 +40,44 @@ if __name__ == "__main__":
         print("An error occurred. Please check the log file for details.")
 
 # Pапустить код из командной строки, указав число в качестве аргумента:
-# python script.py 755
+# python "целое число.py" 755
 
+# Дан список повторяющихся элементов. Вернуть список с дублирующимися элементами. В результирующем списке не должно быть дубликатов.
+
+import logging
+import sys
+
+
+def remove_duplicates(lst):
+    result = []
+    for elem in lst:
+        if elem not in result:
+            result.append(elem)
+    return result
+
+
+if __name__ == "__main__":
+    # Конфигурация логирования
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        filename="log.txt"
+    )
+
+    # Получение параметров из командной строки
+    if len(sys.argv) > 1:
+        input_list = [int(arg) for arg in sys.argv[1:]]
+    else:
+        input_list = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
+
+    try:
+        unique_list = remove_duplicates(input_list)
+        logging.info(f"Original list: {input_list}")
+        logging.info(f"List with duplicates removed: {unique_list}")
+        print(unique_list)
+    except Exception as e:
+        logging.error(f"An error occurred: {str(e)}")ф
+        print("An error occurred. Please check the log file for details.")
+
+# Запустить код из командной строки, указав число в качестве аргумента:
+# python "повторяющиеся элементы.py" 1 2 2 3 3 3 4 4 4 4
